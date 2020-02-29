@@ -59,7 +59,7 @@ d. set object: intset, hashtable在不同场景下的使用;
 e. sorted set: zip list, skip list在不同场景下的使用;  
 c. hash object: zip list, hash table在不同场景下的使用;  
 
-## 引用计数内存回收&对象共享&LRU(Last recent used)
+## 引用计数内存回收&对象共享&LRU(Least recently used)
 
 引用计数: 因C并不具体自动的垃圾回收机制, Redis通过引用计数机制, 回收内存. 
 
