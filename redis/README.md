@@ -53,7 +53,7 @@
 - 使用type&encoding 解耦Redis data type 与 implement data struct.
 - 根据不同使用场景, 使用不同的implement data type e.g:
 
-a. string object: int, embstr, sds在不同场景下的使用;  
+a. string object: int, embstr(redis obj & sds 通过一次内存分配申请/释放), sds在不同场景下的使用;  
 b. list object: zip list, linked list在不同场景下的使用(3.2以下, 3.2引入了quick list);  
 d. set object: intset, hashtable在不同场景下的使用;  
 e. sorted set: zip list, skip list在不同场景下的使用;  
@@ -81,7 +81,7 @@ save 60 1000
 
 额外注意, SAVE时, 已有过期时间设置的过期键, 在从RDB中恢复时会主动过期之.
 
-AOF(Append only File): 实质为对键的修改命令的记录(文本记录方式), 需要注意的是AOF实际过程有三: append, write, sync. 分别对应写AOF缓冲区, 写文件缓冲区, 写磁盘, 后2步相关内容参考OS File Manage(AOF记录写磁盘的时机, 也可通过配置`appendfsync: always, everysec, no`). 
+AOF(Append only File): 实质为对键的修改命令的记录(文本记录方式), 需要注意的是AOF实际过程有三: append, write, sync. 分别对应写AOF缓冲区, 写文件缓冲区, 写磁盘, 后2步相关内容参考OS File Manage(AOF记录写磁盘的时机, 也可通过配置`appendfsync: always/everysec/no`).
 
 额外注意, 随着AOF的增长, 其中会多很多可以合并的日志项比如(`set keyA valueA; del keyA`), 通过rewriteaof 完成对AOF文件的重写, 此外重写并非分析AOF操作记录, 而是对当前DB状态的写入AOF中, 此为阻塞操作. 同样有 `BGREWRITEAOF`, 同样是fock子进程执行.
 
