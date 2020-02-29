@@ -49,9 +49,11 @@ Ref:
 
 > Because gap locking is disabled, phantom problems may occur, as other sessions can insert new rows into the gaps. For information about phantoms, see Section 15.7.4, “Phantom Rows”.
 
-通过 consistent read, 保证READ COMMITED, 在事务中, 只能读到事务开始时, 已提交的修改 & 事务中做出的修改, 强烈建议阅读Ref(3)
+> With READ COMMITTED isolation level, each consistent read within a transaction sets and reads its own fresh snapshot.
 
-对于locking reads, UPDATE, DELETE, InnoDB, 仅锁定(要)索引的记录, 之间的"间隙"并不锁定. 由于 gaps lock is disable, 幻影行(phantom rows)可能被插入! 导致同一事务2次读, 返回数据行数不一致, 不可重复读! 解决 -> REPEATABLE READ
+通过 consistent read, 保证READ COMMITED, 在事务中, 只能读到已提交的修改(包含事务中提交的), 强烈建议阅读Ref(3)
+
+对于locking reads, UPDATE, DELETE, InnoDB, 仅锁定(要)索引的记录, 之间的"间隙"并不锁定. 由于 gaps lock is disable, 幻影行(phantom rows)可能被插入! 导致同一事务2次读, 返回数据行数不一致, 不可重复读!, 而每次读时的snapshot refresh导致不可重复读(已提交的修改, 该事务里可见) 解决 -> REPEATABLE READS
 
 更多, 强烈建议阅读Ref(1): 
 
@@ -74,8 +76,6 @@ Ref:
 懒的翻译了, 总结一下: 在同一事务, 非加锁的读(多次), 是建立在第一次读时的快照基础上, 保证读的一致性(详细参见Ref(3)); 对于有锁读, 根据是否使用索引及索引类型加锁(是否使用gap locks or next-key lock等)用以block其它session的插入 -> 解决幻读问题, 但可能读不到最新数据.
 
 强烈建议阅读 consistent read Ref(4), 本系列也会增加对4的总结升华:)
-
-另外, 很多文章对于幻行产生的描述略有歧义, 幻行产生实质是在 READ COMMITED 的隔离级别下, 事务加锁的方式(仅锁用到的行), 对于行"间隙"未加锁, 导致事物执行期间插入了新的数据, 而非事务执行期间, 其它事务的修改可见! (有些地方错误的以图示A, B事务, B先完成的修改, 导致A可见. 实际仅在限定情况下如此, 前述!)
 
 4. SERIALIZABLE
 
