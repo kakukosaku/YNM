@@ -7,8 +7,10 @@
     - [isolation level](mysql/isolation_level.md)
     - [multi-version concurrent control](mysql/mvcc.md)
     - [InnoDB lock](mysql/innodb_lock.md)
+    - [Mysql High Availability, MHA](mysql/mha.md)
 
 - [Redis](redis/README.md)
+    
 
 - Nginx
     

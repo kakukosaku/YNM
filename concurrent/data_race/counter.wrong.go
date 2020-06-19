@@ -22,7 +22,7 @@ var c count32
 
 func main() {
     loop := 1000
-    fmt.Printf("start %d goroutine concurrent incr counter:\n", loop)
+    fmt.Printf("start %s goroutine concurrent incr counter:\n")
 	wg := sync.WaitGroup{}
 	for i := 0; i < loop; i++ {
 		wg.Add(1)
