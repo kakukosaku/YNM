@@ -340,7 +340,7 @@ CPython for this maintains two double-linked lists: one list of objects to be sc
 
 2. 然后GC扫描每个container object并将其所引用的对象的gc_ref减1([decrements by 1](http://hg.python.org/cpython/file/eafe4007c999/Modules/gcmodule.c#l386)). 换句话说, 我们仅关心“object to scan”列表以外的引用(如变量),而不关心列表中其他容器对象的引用。
 
-![step2](https://pythoninternal.files.wordpress.com/2014/07/python-cyclic-gc-2-new-page.pngk)
+![step2](https://pythoninternal.files.wordpress.com/2014/07/python-cyclic-gc-2-new-page.png)
 
 3. 再次扫描每个container objects, 将gc_ref为0的标记为 GC_TENTATIVELY_REACHABLE, 移至 tentatively unreachable list.
 
