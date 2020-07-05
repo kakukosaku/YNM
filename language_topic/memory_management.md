@@ -2,9 +2,32 @@
 
 ## Overview
 
+这里主要介绍各语言的内存布局(对已分配内存的分配), GC被分在单独的章节中介绍
+
 ## Calalog
 
+- [Java Memory Management](#java-memory-management)
 - [Python Memory Management](#ptyhon-memory-mangement)
+
+### Java Memory Management
+
+中文世界里经常把 Memory manage(内存管理) & Memory Model(内存模型)误用, 首先做出定义:
+
+Java内存管理: 区别于操作系统的内存管理(对进程拥有内存资源的管理&调度), Java内存管理, 用以管理Java对象(自带垃圾回收功能的语言, 需要在适时释放内存, 供新的对象使用或归还操作系统), 当然需要先知道Java对内存的使用情况(内存布局)&GC算法.
+
+Java内存模型: 指并发环境下, 多线程如何(通过共享的内存)交互&共享对象, 参见如下一般性定义: 
+
+> In computing, a memory model describes the interactions of threads through memory and their shared use of the data.
+
+从是否线程间共享的角度看, 有如下划分:
+
+- 线程间共享: 堆区(Heap), 元数据区(Metaspace); 
+
+其中 Heap 中包括(young generation(Eden, s0, s1), old generation); Metaspace 中包括(classMetaInfo, constantPool, methodMetaInfo)
+
+- 线程间私有: JvmStack, NativeMethodStack, ProgramCounterRegister;
+
+其中 JvmStack 中包括局部变量表, 操作数栈, 动态链接, 方法返回地址;
 
 ### Ptyhon Memory Mangement
 

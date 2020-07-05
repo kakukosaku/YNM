@@ -12,7 +12,7 @@ Language agnostic
 
 Language Specific:
 
-- Java
+- [Java GC](#java-gc)
 - [Ptyhon GC](#python-gc)
 
 Ref:
@@ -26,6 +26,22 @@ Ref:
 Ref:
 
 1. https://www.artima.com/insidejvm/ed2/gc.html
+
+Garbage collection algorithm must do two basic things:
+
+1. detect garbage objects.
+2. reclaim the heap space used by the garbage objects and make the space available again to the program.
+
+发现garbage objects一般通过define a set of roots and determining reachability from the roots.
+
+GC root一般包括本地变量表, 栈帧操作数以及any object references in any class variables. 此外还有:
+
+Another source of roots are any object references, such as strings, in the constant pool of loaded classes. The constant pool of a loaded class may refer to strings stored on the heap, such as the class name, superclass name, superinterface names, field names, field signatures, method names, and method signatures. 
+
+Another source of roots may be any object references that were passed to native methods that either haven't been "released" by the native method.
+
+2个基本的区分live objects from garbage的方法是reference counting & tracing
+
 
 ### Python GC
 
