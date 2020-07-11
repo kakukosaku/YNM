@@ -26,6 +26,7 @@ Ref:
 Ref:
 
 1. https://www.artima.com/insidejvm/ed2/gc.html
+2. Understanding the JVM, Advance Feature and Best Practices. 3th
 
 Garbage collection algorithm must do two basic things:
 
@@ -40,8 +41,45 @@ Another source of roots are any object references, such as strings, in the const
 
 Another source of roots may be any object references that were passed to native methods that either haven't been "released" by the native method.
 
-2个基本的区分live objects from garbage的方法是reference counting & tracing
+2个基本的区分live objects from garbage的方法是reference counting(也称: 直接垃圾收集) & tracing(也称: 间接垃圾收集)
 
+JVM的主流实现均使用以"分代回收"理论为基础的 tracing 垃圾回收算法. 分代回收基于以下二个假设:
+
+- 弱分代假说: 绝大多数对象"朝生夕死"
+
+导出设计方案: 每次回收仅关注如何保留少量存活而不标记大量将要回收的对象, GC Root出发的可达性发析
+
+- 强分代假说: 熬过越多次垃圾收集过程的对象就越难消亡
+
+导出方案: 以较低频率回收老年代对象
+
+以及为解决分代之前引用带来的对老年代频繁GC的假说:
+
+- 跨代引用假说: 跨代引用相对于同代引用来说仅占极少数
+
+在新生代中建立的全局记录数据结构(记忆集), 将老年代划分为若干小块, 标识出老年代的哪一块内存会存在跨代引用. 并在GC时, 将其加入GC Root进行扫描.
+
+在分代回收中, 具体的tracing algorithm有:
+
+- tracing collectors:
+
+mark and sweep
+
+In the mark phase, the garbage collector traverses the tree of references and marks each object it encounters. In the sweep phase, unmarked objects are freed, and the resulting memory is made available to the executing program.
+
+标记交换算法会引用内存碎片化, 在申领大对象时无连续的内存导致OOM(out of memory).
+
+改进: Two strategies commonly used by mark and sweep collectors are compacting and copying. 都通过移动对象达到减少内存碎片化. 
+
+- compacting collectors:
+ 
+移动到一端堆内存的一端
+
+> Compacting collectors slide live objects over free memory space toward one end of the heap. 
+
+- copying collectors: 
+
+不需要mark&sweep, 将活跃对象直接复制到额外单独的区域, s0, s1区的使用.
 
 ### Python GC
 
