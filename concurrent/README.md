@@ -1,4 +1,20 @@
+# Concurrency
 
-ref: https://topic.alibabacloud.com/a/the-difference-between-java-bio-nio-and-aio-__java_1_27_20242144.html
+http://web.mit.edu/6.005/www/fa15/classes/19-concurrency/
 
-Before you compare these two patterns, we first understand a few concepts, what is blocking and non-blocking, what is synchronous and asynchronous, synchronous and asynchronous are for application and kernel interaction, synchronization refers to the user process triggering IO operations and waiting or polling to see if the IO operation is ready, Asynchronous means that the user process triggers the IO operation and then starts to do its own thing, and when the IO operation has been completed, it will be notified of IO completion. And blocking and non-blocking are aimed at the process when accessing the data, depending on how the IO operation is ready, it is a way to read or write a function that reads or writes to the function, and the read or write functions will wait instead of blocking, and the read or write function immediately returns a status value.
+# Thread Safe
+
+http://web.mit.edu/6.005/www/fa15/classes/20-thread-safety/
+
+There are basically four ways to make variable access safe in shared-memory concurrency:
+
+- Confinement
+- Immutability
+- Thread safe type
+- Synchronization
+
+# Locks and Synchronization
+
+http://web.mit.edu/6.005/www/fa15/classes/23-locks/#concurrency_in_practice
+
+**Locks are one synchronization technique**. A lock is an abstraction that allows at most one thread to own it at a time. Holding a lock is how one thread tells other threads: “I’m changing this thing, don’t touch it right now.”
