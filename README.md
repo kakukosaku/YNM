@@ -3,15 +3,15 @@
 ## Overview
 
 1. [Operating System](https://github.com/kakukosaku/OperatingSystem) link to another repo
-2. [Databases](#databases), e.g. MySQL, Redis
-3. [web components](#web-components), e.g. Nginx
-4. [Middleware](#middleware), e.g. message queue
+2. [Databases](#databases): MySQL, Redis
+3. [web components](#web-components): Nginx
+4. [Middleware](#middleware): message queue
 
 some conceptual topics
 
-1. [Language related topics](#language-related-topics), e.g. gc, memory model and other language specific feature.
-2. [Concurrent](#concurrent), e.g. multiple-thread, lock, multiplexing, event-loop base solution, coroutine/goroutine , etc.
-3. [Distributed System](), e.g.
+1. [Language related topics](#language-related-topics): gc, memory model and other language specific feature.
+2. [Concurrent](#concurrent): multiple-thread, lock, multiplexing, event-loop base solution, coroutine/goroutine etc.
+3. [Distributed System](#distributed-system): microservice, CAP theory etc.
 
 ### Databases
 
