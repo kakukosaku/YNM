@@ -8,3 +8,7 @@
 4. 循环等待条件(同类资源大于1
 
 处理死锁基本方法, 详见操作系统相关章节 :)
+
+java synchronized implementation:
+
+http://bigdatadecode.club/JavaSynchronizedTheory.html
