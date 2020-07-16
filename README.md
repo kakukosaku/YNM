@@ -10,7 +10,7 @@
 some conceptual topics
 
 1. [Language related topics](#language-related-topics): gc, memory model and other language specific feature.
-2. [Concurrent](#concurrent): multiple-thread, lock, multiplexing, event-loop base solution, coroutine/goroutine etc.
+2. [Concurrent](#concurrent): multiple-thread, lock, I/O multiplexing, event-loop base solution, coroutine/goroutine etc.
 3. [Distributed System](#distributed-system): microservice, CAP theory etc.
 
 ### Databases
@@ -58,7 +58,7 @@ Multiple thread
 
 Lock
 
-[multiplexing]()
+[I/O multiplexing](concurrent/multiplxing/README.md) more info: [I/O Models](https://github.com/kakukosaku/OperatingSystem/blob/master/topics/linux_5_io_model.md)
 
 Event loop + multiplexing base solution
 
