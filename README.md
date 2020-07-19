@@ -44,6 +44,8 @@ Nginx
 
 [kafka](middleware/mq/kafka/README.md)
 
+[zookeeper](middleware/zookeeper_overview.md)
+
 ### Language related topics
 
 - [garbage collection](language_topics/gc/README.md)
@@ -71,3 +73,5 @@ Goroutine
 [Introduction](distributed_system/README.md)
 
 [microservice](distributed_system/microservice/README.md)
+
+[Distributed Consistency](distributed_system/consistency/README.md)
