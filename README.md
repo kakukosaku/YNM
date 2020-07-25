@@ -22,7 +22,7 @@ MySQL
 - [isolation level](databases/mysql/isolation_level.md)
 - [multi-version concurrent control](databases/mysql/mvcc.md)
 - [InnoDB](databases/mysql/innodb_lock.md)
-- [Mysql High Availability, MHA](databases/mysql/mha.md)
+- [Replication](databases/mysql/replication.md)
 
 Redis
 
@@ -52,7 +52,10 @@ Nginx
 
 ### Language related topics
 
-- [garbage collection](language_topics/gc/README.md)
+Demonstration with Java, Python or Go
+
+- [Garbage Collection, GC](language_topics/gc.md)
+- [Memory model](language_topics/memory_model.md) & [Memory Management(or layout)](language_topics/memory_management.md)
 
 shell
 
