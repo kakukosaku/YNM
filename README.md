@@ -15,18 +15,22 @@ some conceptual topics
 
 ### Databases
 
-[MySQL](databases/mysql/README.md)
+MySQL
 
 - [explain explain](databases/mysql/explain_explain.md)
 - [autocommit commit rollback](databases/mysql/autocommit_commit_rollback.md)
 - [isolation level](databases/mysql/isolation_level.md)
 - [multi-version concurrent control](databases/mysql/mvcc.md)
-- [InnoDB lock](databases/mysql/innodb_lock.md)
+- [InnoDB](databases/mysql/innodb_lock.md)
 - [Mysql High Availability, MHA](databases/mysql/mha.md)
 
-[Redis](databases/redis/README.md)
+Redis
 
-- [Redis](databases/redis/README.md)
+- [Efficient Data Type](databases/redis/README.md#efficient-data-type)
+- [Persistence: RDB & AOF](databases/redis/README.md#persistence-rdbaof)
+- [Replication](databases/redis/README.md#replication)
+- [Sentinel](databases/redis/README.md#sentinel)
+- [Cluster](databases/redis/README.md#cluster)
 
 ### Web components
 
@@ -62,7 +66,7 @@ Lock
 
 [I/O multiplexing](concurrent/multiplxing/README.md) more info: [I/O Models](https://github.com/kakukosaku/OperatingSystem/blob/master/topics/linux_5_io_model.md)
 
-Event loop + multiplexing base solution
+Event loop + multiplexing base solution, eg [Tornado](https://www.tornadoweb.org/en/stable/)
 
 Coroutine
 
