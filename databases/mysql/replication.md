@@ -1,10 +1,10 @@
 # Replication
 
+## Overview
+
 Ref: https://dev.mysql.com/doc/refman/8.0/en/replication.html
 
 MySQL Replication is asynchronous be default...Advantages of replication include:
-
-## Overview
 
 1. Scale-out solution: 读写分离, 提升throughout.
 2. Data security: 从库提供一定的数据容灾能力.
