@@ -21,7 +21,7 @@ RabbitMQ 为了保证服务的稳定性, 作了很多方面的努力, 这些也�
 - Monitoring and Health Checks
 
 1. [Acknowledgements and Confirms](#ack-and-confirm)
-2. Clustering
+2. [Clustering](#clustering-guide)
 3. Queue Mirroring
 4. Publishers and Consumers
 5. Others: Alarms, Monitoring, Metrics and Health Check
@@ -29,6 +29,18 @@ RabbitMQ 为了保证服务的稳定性, 作了很多方面的努力, 这些也�
 ### Ack and Confirm
 
 Ref: https://www.rabbitmq.com/confirms.html
+
+该部分包含以下话题:
+
+- 为什么需要ACK模式
+- 手动ACK, 自动ACK模式
+- ACK, NACK, REJECT and Requeue
+- 自动的Requeue
+- Channel Prefetch(Consumer流量控制), 对吞吐量的影响
+- 常见的Client error
+- Publisher Confirms 及其数据安全的话题
+
+**为什么需要应用层(RabbitMQ)需要ACK?**
 
 当Client and RabbitMQ node之间的连接故障发生时: msg可能正在"路上"; 或者正在2方的TCP stack buffers正等待装包/解包中. 此时这种状态的消息是没有投递成功的!
 
@@ -172,3 +184,7 @@ RabbitMQ Node实际可能会丢失persistent messages在未写磁盘前的fails,
 **Limitation**
 
 Delivery tag is a 64bit long value, and thus its maximum value is `922 3372 0368 5477 5807`(900多亿亿, 相当大的数!). 但由于delivery tag is channel scope. 几乎不可能publisher or consumer 达到这个限制.
+
+### Clustering Guide
+
+
