@@ -26,7 +26,7 @@ High level summary for InnoDB's ACID feature and its implementation.
 - [multi-version concurrent control](databases/mysql/mvcc.md)
 - [InnoDB Locking and Transaction Model](databases/mysql/innodb_locking_and_transaction_model.md)
 
-Include lock, isolation level, consistent nonlocking read, locking read, deadlocks, transaction scheduling, etc...
+Include 1. lock; 2. isolation level;  3. consistent nonlocking read; 4. locking read; 5. deadlocks; 6. transaction scheduling, etc...
 
 High Available
 
@@ -50,9 +50,9 @@ Others
 
 **Rabbit MQ**
 
-Reliability
+- [Reliability](middleware/mq/rabbitmq/reliability_guide.md)
 
-- [Publish Confirm & Consumer ACK](middleware/mq/rabbitmq/publish_confirm_consumer_ack.md)
+Include 1. Ack and Confirms; 2. Clustering; 3. Queue Mirroring; 4. Publishers & Consumers; and alert, Monitoring, Metrics and health check.
 
 **kafka**
 
