@@ -4,8 +4,8 @@
 
 1. [Operating System](https://github.com/kakukosaku/OperatingSystem) link to another repo
 2. [Databases](#databases): MySQL, Redis
-3. [web components](#web-components): Nginx
-4. [Middleware](#middleware): message queue, coordinator.
+3. [Middleware](#middleware): message queue, coordinator.
+4. [web components](#web-components): Nginx
 
 some conceptual topics
 
@@ -46,6 +46,22 @@ Others
 - [Sentinel](databases/redis/README.md#sentinel)
 - [Cluster](databases/redis/README.md#cluster)
 
+### Middleware
+
+**Rabbit MQ**
+
+Reliability
+
+- [Publish Confirm & Consumer ACK](middleware/mq/rabbitmq/publish_confirm_consumer_ack.md)
+
+**kafka**
+
+- [Overview](middleware/mq/kafka/README.md)
+
+**zookeeper**
+
+- [Overview](middleware/zookeeper_overview.md)
+
 ### Web components
 
 **Nginx**
@@ -53,16 +69,6 @@ Others
 - [How nginx process a request](web_components/nginx/process_request.md)
 - [load balance](web_components/nginx/load_balancer.md)
 - [location priority](web_components/nginx/location_priority.md)
-
-### Middleware
-
-**Rabbit MQ**
-
-- [Publish Confirm & Consumer ACK](middleware/mq/rabbitmq/publish_confirm_consumer_ack.md)
-
-**[kafka](middleware/mq/kafka/README.md)**
-
-**[zookeeper](middleware/zookeeper_overview.md)**
 
 ### Distributed System
 
