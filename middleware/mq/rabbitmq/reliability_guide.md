@@ -22,7 +22,7 @@ RabbitMQ 为了保证服务的稳定性, 作了很多方面的努力, 这些也�
 
 1. [Acknowledgements and Confirms](#ack-and-confirm)
 2. [Clustering](#clustering-guide)
-3. Queue Mirroring
+3. [Queue Mirroring](#classic-mirrored-queues)
 4. Publishers and Consumers
 5. Others: Alarms, Monitoring, Metrics and Health Check
 
@@ -186,5 +186,150 @@ RabbitMQ Node实际可能会丢失persistent messages在未写磁盘前的fails,
 Delivery tag is a 64bit long value, and thus its maximum value is `922 3372 0368 5477 5807`(900多亿亿, 相当大的数!). 但由于delivery tag is channel scope. 几乎不可能publisher or consumer 达到这个限制.
 
 ### Clustering Guide
+
+该部分主要的话题:
+
+- RabbitMQ 如何区分不同的节点(node): node name
+- Requirements for clustering
+- 什么数据在Nodes间不复制
+- What clustering means for client
+- How cluster are formed
+- Nodes间如何认证
+- 为什么使用奇数的Nodes很重要以及为什么2个节点非常不推荐
+- Nodes重启后, 如何加入集群
+- Node readliness probes and how they can affect rolling cluster restarts
+- 如何移除集群节点
+- 如何重置节点状态
+
+More info ref to [Cluster Formation And Peer Discovery](https://www.rabbitmq.com/cluster-formation.html) 这篇文章专注于节点发现及集群formation automation-related topics.
+
+RabbitMQ cluster 是一个或多个节点的逻辑分组, 它们共享 users, virtual hosts, queues, exchanges, bindings, runtime parameters and other distributed state.
+
+**组建集群**
+
+A RabbitMQ cluster can formed in a number of ways. 包括直接在配置文件上写明nodes list; 以及通过其它分布式组件发现节点等方式. 这里不赘述, 参见 [Cluster Formation Guide](https://www.rabbitmq.com/cluster-formation.html)
+
+需要注意的是, 一个群集都是从一个节点开始, 其它节点逐渐加入形成集群. 反之也可.
+
+**Node Names(Identifiers)**
+
+RabbitMQ节点名称由2部分组成, prefix@hostname, e.g: `rabbit@node1.messaging.svc.local`. 集群中的node name必须唯一.
+
+同时, 集群中Node通过hostname contact each other, 这意味着hostname必须可解析. 启动时未通过 `RABBITMQ_NODENAME` 环境变量指定, 自动生成`rabbit@computer_hostname`.
+
+其次, 如果hostname使用 qualified domain name (这称之为long node name), 必须设置`RABBITMQ_USE_LONGNAME` to true.
+
+**Cluster Formation Requirements**
+
+1. Hostname Resolution: 如前介绍
+2. Port Access:
+
+- 4369: epmd, a helper discovery daemon used by RabbitMQ nodes and CLI tools.
+- 5672,5671: used by AMQP 0-9-1 and 1.0 clients without and with TLS
+- 25672: used for inter-node and CLI tools communication与Redis sentinel默认规则类似, 6379+20000 :)
+
+... 一堆端口, 不赘述
+
+**Nodes in a Cluster**
+
+What is replicated?
+
+所有RabbitMQ Broker运行需要的数据/状态is replicated across all nodes. 除了message queues, 它们默认仅留存在一个节点内, 但它们对整个集群节点都是可见, 可达的.
+
+如果想要在节点间也复制queues, 需要特定类型的queues, 如[Quorum Queues](https://www.rabbitmq.com/quorum-queues.html) RabbitMQ 3.8.0后可用; [Classic Mirrored Queues](https://www.rabbitmq.com/ha.html) 文档称前者为下一代高可用Queues, 可推荐前者.
+
+Nodes are Equal Peers
+
+我愿称之为节点间地位相当...一些分布式系统有leader and follower nodes之分. RabbitMQ中节点均为地位对等的节点, 这在 [queue mirroring](https://www.rabbitmq.com/ha.html) and plugins 被考虑进来时才会有细微的不同, 这里不做过多延伸.
+
+How CLI Tools Authenticate to Nodes
+
+所有集群使用同样的cookie(alphanumeric characters up to 255 characters in size)相互鉴权, 一般存储在配置文件中(使用0600的权限, 保证仅所主可读, 或其它类似的安全方法). 文档上推荐使用分布式组件来完成部署.
+
+其它: Docker中使用`RABBITMQ_ERLANG_COOKIE`去判断config file location, 在UNIX like OS上它一般在 `/var/lib/rabbitmq/.erlang.cookie`, CLI Tools 使用`$HOME/.erlang.cookie`
+
+**Node Counts and Quorum**
+
+由于一些特性: quorum queue(前端介绍过, 替代mirroring queue的下一代高可用queue), client tracking in MQTT(不做介绍) 需要节点间达成一致, 使用奇数个cluster nodes are highly recommended: 1,3,5,7 and so on.
+
+2个节点非常不推荐, 因为它们无数达到多数胜出的一致...更多解释pass, 类型于Redis 2个sentinel在2个sentinel之间发生网络分区master down时无法达到多数, 以开启failover, 而事实上使sentinel机制失效.
+
+From the consensus point of view, 4 或 6 个节点也3或5有同样的可用性. The [Quorum Queues guide](https://www.rabbitmq.com/quorum-queues.html) more detail.
+
+**Clustering and Clients**
+
+在集群所有节点可用时, client可以连接任意节点, 执行任意操作. Nodes will route operations to the [quorum queue leader](https://www.rabbitmq.com/quorum-queues.html) or [queue master replica](https://www.rabbitmq.com/ha.html#master-migration-data-locality) transparently to clients.
+
+client一次实际只连接一个node! 在node failure时, client应该能重连接到不同的节点. 因此, 许多Client API接受 a list of endpoints(hostname or ip address) as a connection option. 这些Host会在init connection故障时使用.
+
+对于mirrored queue与quorum queue这里不做过多说明.
+
+**Clustering and Observability**
+
+Client connections, channels and queues will be distributed across cluster nodes. Operators need to be able to inspect and [monitor](https://www.rabbitmq.com/monitoring.html) such resource across all cluster nodes.
+
+CLI tools and web UI 提供了一些方便的集群信息查询能力.
+
+**Node Failure Handling**
+
+RabbitMQ brokers能容忍单个Node的故障, failure. Nodes can be started and stoped at will, as long as they can contact a cluster member node known at the time of shudown.
+
+mirroring Queue允许queue contents在节点间复制. 单个节点down机, 不受影响.
+
+而对于[non-mirroring queue failure](https://www.rabbitmq.com/ha.html#non-mirrored-queue-behavior-on-node-failure):
+
+1. 如果是持久化的queue, master node of the queue down机, 导致queue不可用, 任何写入/消费都导致channel exception.
+2. 非持久化的queue, will be deleted. queue 被删, 意味着non-route message if msg come.
+
+**Metrics and Statistics**
+
+Every node stores and aggregates its own metrics and stats, and provides an API for other nodes to access it. Some stats are cluster-wide, others are specific to individual nodes.
+
+Node that responds to an HTTP API request contacts its peers to retrieve their data and then produces an aggregated result.
+
+**Disk and RAM Nodes**
+
+pass
+
+**Clustering Transcript with rabbitmqctl**
+
+pass
+
+**Starting Independent Nodes**
+
+pass
+
+**Creating a Cluster**
+
+pass
+
+**Restarting Cluster Nodes**
+
+pass
+
+**Schema Syncing from Online Peers**
+
+pass
+
+**Restarts and Health Checks (Readiness Probes)**
+
+pass
+
+**Hostname Changes Between Restarts**
+
+pass
+
+**Cluster Node Restart Example**
+
+pass
+
+**Forcing Node Boot in Case of Unavailable Peers**
+
+pass
+
+
+### Classic Mirrored Queues
+
+Ref: https://www.rabbitmq.com/ha.html
 
 
