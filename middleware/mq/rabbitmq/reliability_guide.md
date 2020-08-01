@@ -332,4 +332,131 @@ pass
 
 Ref: https://www.rabbitmq.com/ha.html
 
+[Quorum queues](https://www.rabbitmq.com/quorum-queues.html) is more modern queue type that offers high availability via replication and focuses on data safety.
 
+quorum queues 是RabbitMQ主推(3.8.0版本后支持, 2019.11 release)的高可用方案, 但了解mirroring queues仍然很有必要.
+
+下面主页介绍镜像队列 mirrored queue.
+
+- mirrored queue如何工作
+- mirrored queue如何启用
+- mirrored queue哪些配置也以使用
+- 推荐什么样的replication factor
+- Data locality
+- Master election(mirror promotion) and unsynchronized mirrors.
+- Mirrored vs. non-mirrored queue behavior in case of node failure.
+- Batch synchronisation of newly added and recovering mirrors.
+
+and more. 这篇文章假设你对cluster有所了解.
+
+**What is Queue Mirroring**
+
+Queue里的消息默认只存放在声明该Queue的节点中! 这与exchanges and bindings时不同, 后2者can always be considerde to be on all nodes. Queue可以在选择在多个节点上做镜像, mirrors.
+
+每个mirrored queue都有一个master和一个或多个mirrors. master mirrored queue所在的节点称之为master node.
+
+每个queue都有它自己的 "master node". 对queue的任何操作都首先应用在queue的master node, 然后传播(propagate)到其它mirrors. 这些操作涉及(msg enqueue, delivering msg, ack from consumer and so on).
+
+- 投递的消息, 先投递到master, 再复制到所有mirrors
+- 消费者实际是直接连接master node, 不论client一开始连接的哪个node. 一旦master ack msg, 所有mirrors都会删除该消息.
+
+因此, 对于consumer而言mirrors增加了availability, 但并不能平衡负载. (all participating nodes each do all the work)
+
+如果master node fails, 最老的mirrors被提升为new master node只要它是synchronized. Unsynchronized mirrors也可以被提升, 但这依赖于mirroring parameters.
+
+> 在分布式系统中有很多名词用来描述 primary replicas and secondary replicas, 本文以master node指代primary replicas, mirrors指代secondary replicas.
+> 
+> 在HTTP API and CLI tools中, 以slave指代secondary replicas.
+
+**How Mirroring is Configured**
+
+Mirroring参数通过 [policies](https://www.rabbitmq.com/parameters.html#policies) 配置. A policy matches one or more queues by name(using a regular expression pattern) and contains a definition(a map of optional arguments) that are added to the total set of properties of the matching queues.
+
+more info pass.
+
+**Queue Arguments that Control Mirroring**
+
+如上所说, queues have mirroring enable via policies, Policies can change at any time; 可以在运行时使得non-mirrored queue变为mirrored queue(反之亦然)
+
+parameters detail info pass...
+
+**Replication factor**
+
+一般来说, non-mirrored queue有更高的性能表现, replicas across all node is conservative(所有节点都持有一个mirrors是最保守的配置). 一般来说: 3个node组成的cluster, 设置为2.
+
+同时, 还需要明确: 如果消息本身消费就很快或者对时间很敏感, 更小的mirrors会更好, 甚于于不使用mirrors.
+
+**How to Check if a Queue if Mirrored**
+
+pass
+
+**Queue Master Location**
+
+通过使用`x-queue-master-locator`queue declare argument, 设置queue-master-locator policy key or by defining the `queue_master_locator` key in `the configuration file`有3种方式:
+
+1. min-masters
+2. client-local, default, 声明队列的node为master node
+3. random
+
+"nodes" Policy and Migrating Masters, 迁移之前, 先确保至少一个mirrors是synchronized状态(即使要花很久). 一旦synchronization完成, 这个node就像failure一样, 连接其上的connetion will be disconnected and need to reconnect.
+
+**Mirroring of Exclusive Queues**
+
+Exclusive queue排它队列在声明其的connection关闭时就会被删除, 在node间复制(or durable for that matter)它is not useful.
+
+所以exclusive queues are never mirrored. They are also never durable(even if declared as such).
+
+**Non-mirrored Queue Behavior in a Cluster**
+
+本文着眼于mirrored queue的高可用(故障下的failover), 但简短的介绍集群中non-mirrored queue的本现作为对照组也很重要.
+
+- If master node of a queue可用, 所有对queue的操作可以在连接任意其它node上进行. Cluster nodes will route operations to the master node transparently to the clients.
+- If master node of a queue不可用, 对于non-mirrored queue的表现, 依赖于它是否持久化了. 1. 持久化的queue此时不可用(在任意其它结点上, 直到master node重新上线). 2. 非持久化的queue仅简单删除该queue, 后续消息当无route处理.
+
+**Mirrored Queue Implementation and Semantics**
+
+针对mirrored queue更细节的讨论
+
+**Publisher Confirms and Transactions**
+
+pass
+
+**Flow Control**
+
+pass
+
+**Master Failure and Consumer Cancellation**
+
+pass
+
+**Unsynchronized Mirrors**
+
+pass
+
+*Promotion of Unsynchronised Mirrors on Failure***
+
+pass
+
+**Promotion of Unsynchronised Mirrors on Failure**
+
+Starting with RabbitMQ 3.7.5, the ha-promote-on-failure policy key controls whether unsynchronised mirror promotion is allowed.
+
+**Stopping Nodes and Synchronisation**
+
+pass
+
+**Stopping Master Nodes with Only Unsynchronised Mirrors**
+
+pass
+
+**Loss of a Master While All Mirrors are Stopped**
+
+pass
+
+**Batch Synchronization**
+
+pass
+
+**Configuring Synchronisation**
+
+pass
