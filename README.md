@@ -44,7 +44,6 @@ High Available
 Others
 
 - [explain explain](databases/mysql/explain_explain.md)
-- [autocommit commit rollback](databases/mysql/autocommit_commit_rollback.md)
 
 **Redis**
 
