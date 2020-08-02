@@ -2,16 +2,16 @@
 
 ## Overview
 
-1. [Operating System](https://github.com/kakukosaku/OperatingSystem) link to another repo
-2. [Databases](#databases): MySQL, Redis
-3. [Middleware](#middleware): message queue, coordinator.
-4. [web components](#web-components): Nginx
+- [Operating System](https://github.com/kakukosaku/OperatingSystem) link to another repo
+- [Databases](#databases): MySQL, Redis
+- [Middleware](#middleware): message queue, coordinator.
+- [web components](#web-components): Nginx
 
 some conceptual topics
 
-1. [Concurrent](#concurrent): multiple-thread, lock, I/O multiplexing, event-loop base solution, coroutine/goroutine etc.
-2. [Distributed System](#distributed-system): microservice, CAP theory etc.
-3. [Language related topics](#language-related-topics): gc, memory model and other language specific feature.
+- [Concurrent](#concurrent): multiple-thread, lock, I/O multiplexing, event-loop base solution, coroutine/goroutine etc.
+- [Distributed System](#distributed-system): microservice, CAP theory etc.
+- [Language related topics](#language-related-topics): gc, memory model and other language specific feature.
 
 ### Databases
 
@@ -24,13 +24,17 @@ InnoDB Related
 High level summary for InnoDB's ACID feature and its implementation.
 
 - [multi-version concurrent control](databases/mysql/mvcc.md)
-- [InnoDB Locking and Transaction Model](databases/mysql/innodb_locking_and_transaction_model.md)
+- [InnoDB Locking and Transaction Model](databases/mysql/innodb_locking_and_transaction_model.md) Included subtopics:
 
-Include 1. lock; 2. isolation level;  3. consistent nonlocking read; 4. locking read; 5. deadlocks; 6. transaction scheduling, etc...
-
-- Locks Set by Different SQL Statements in InnoDB
-- Deadlocks in InnoDB
-- Transaction Scheduling
+1. [locking](databases/mysql/innodb_locking.md)
+2. InnoDB Transaction Model - [isolation level](databases/mysql/isolation_level.md)
+3. InnoDB Transaction Model - [autocommit, commit, and rollback](databases/mysql/autocommit_commit_rollback.md)
+4. InnoDB Transaction Model - Consistent Nonlocking Reads
+5. InnoDB Transaction Model -[locking read](databases/mysql/locking_read.md)
+6. [Locks Set by Different SQL Statements in InnoDB]()
+7. Phantom Rows
+8. Deadlocks in InnoDB
+9. Transaction Scheduling
 
 High Available
 
