@@ -111,4 +111,4 @@ A next-key lock is an index-record lock plus a gap lock on the gap preceding the
 1. [Transaction Isolation Level](isolation_level.md)
 2. [Autocommit, Commit, and Rollback](autocommit_commit_rollback.md)
 3. Consistent Nonlocking Reads
-4. Locking Reads
+4. [Locking Reads](locking_read.md)

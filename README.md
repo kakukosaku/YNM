@@ -28,6 +28,10 @@ High level summary for InnoDB's ACID feature and its implementation.
 
 Include 1. lock; 2. isolation level;  3. consistent nonlocking read; 4. locking read; 5. deadlocks; 6. transaction scheduling, etc...
 
+- Locks Set by Different SQL Statements in InnoDB
+- Deadlocks in InnoDB
+- Transaction Scheduling
+
 High Available
 
 - [Replication](databases/mysql/replication.md)
