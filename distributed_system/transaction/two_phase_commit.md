@@ -112,4 +112,4 @@ Ref: https://zookeeper.apache.org/doc/current/recipes.html#sc_recipes_twoPhasedC
 
 缺:
 
-相较2PC, precommit后, 出现网络分区 "参与者通常会在等待超时后继续事务提交", 而协调者做出abort决定后, 其它参与者回滚, 事实上仍会造成不一致的数据/状态.
+相较2PC, doCommit后, 出现网络分区 "参与者通常会在等待超时后继续事务提交", 而协调者做出abort决定后, 其它参与者回滚, 事实上仍会造成不一致的数据/状态.
