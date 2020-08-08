@@ -2,16 +2,26 @@
 
 ## Overview
 
-Ref: https://dev.mysql.com/doc/refman/8.0/en/mysql-acid.html
+Ref:
 
-对于ACID的具体的含义, 此处不再赘述, 只有我认为重要的点:
+1. https://dev.mysql.com/doc/refman/8.0/en/mysql-acid.html
+2. https://www.dummies.com/programming/php/making-sure-mysql-database-acid-compliant/
+
+对于ACID的具体的含义, 此处不再赘述, 只写我认为重要的点:
 
 ### Atomicity, A
 
-主要与InnoDB的事务相关
-
+- 要么事务成功(所有操作均执行成功), 要么事务失败(所有操作均不会执行).
 - Autocommit setting
 - BEGIN, COMMIT, ROLLBACK 事务相关statement
+
+MySQL 使用 two-phase commit approach to committing transactions:
+
+1. Prepare phase: A transaction is analyzed to determine if the database is able to commit the entire transaction.
+2. Commit phase: The transaction is physically committed to the database.
+
+> The two-phase commit approach allows MySQL to test all transaction commands during the prepare phase without having to modify any data in the actual tables. 
+> Table data is not changed until the commit phase is complete.
 
 ### Consistency, C
 
