@@ -20,6 +20,7 @@ some conceptual topics
 InnoDB Related
 
 - [InnoDB and the ACID Model](databases/mysql/innodb_and_acid_model.md)
+- [InnoDB Recovery](databases/mysql/innodb_recovery.md)
 
 High level summary for InnoDB's ACID feature and its implementation.
 
@@ -44,6 +45,10 @@ High Available
 Others
 
 - [explain explain](databases/mysql/explain_explain.md)
+
+Optimize
+
+- [order by & limit _offset, _count](databases/mysql/order_by_limit_offset.md)
 
 **Redis**
 
