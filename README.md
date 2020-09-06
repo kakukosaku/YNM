@@ -6,6 +6,9 @@
 - [Databases](#databases): MySQL, Redis
 - [Middleware](#middleware): message queue, coordinator.
 - [web components](#web-components): Nginx
+- [Concurrency](#concurrency)
+- [Distributed System](#distributed-system)
+- [Language Related Topics](#language-related-topics)
 
 some conceptual topics
 
@@ -92,7 +95,7 @@ Include 1. Ack and Confirms; 2. Clustering; 3. Queue Mirroring; 4. Publishers & 
 
 [Distributed Lock](distributed_system/lock/READEME.md)
 
-### Concurrent
+### Concurrency
 
 **Multiple thread**
 
@@ -113,4 +116,4 @@ Goroutine
 - [Garbage Collection, GC](language_topics/gc.md)
 - [Memory model](language_topics/memory_model.md) & [Memory Management(or layout)](language_topics/memory_management.md)
 
-**[Should be familiar to shell]()**
+**Should be familiar to** [shell]()
