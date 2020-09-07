@@ -6,15 +6,9 @@
 - [Databases](#databases): MySQL, Redis
 - [Middleware](#middleware): message queue, coordinator.
 - [web components](#web-components): Nginx
-- [Concurrency](#concurrency)
-- [Distributed System](#distributed-system)
-- [Language Related Topics](#language-related-topics)
-
-some conceptual topics
-
-- [Concurrent](#concurrent): multiple-thread, lock, I/O multiplexing, event-loop base solution, coroutine/goroutine etc.
+- [Concurrency](#concurrency): multiple-thread, lock, I/O multiplexing, event-loop base solution, coroutine/goroutine etc.
 - [Distributed System](#distributed-system): microservice, CAP theory etc.
-- [Language related topics](#language-related-topics): gc, memory model and other language specific feature.
+- [Language Related Topics](#language-related-topics): gc, memory model and other language specific feature.
 
 ### Databases
 
