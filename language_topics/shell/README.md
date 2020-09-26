@@ -3,7 +3,7 @@
 ## Overview
 
 - [Tutorial](#tutorial)
-- [linux commands](cmds)
+- [Linux Command Examples](#linux-command-examples)
 
 ### Tutorial
 
@@ -199,3 +199,41 @@ Hello kaku
 # captcha function return value
 echo $?
 ```
+
+### Linux Command Examples
+
+- sort, uniq
+
+(shell/lines.txt 为示例数据)
+
+单纯排序: `sort lines.txt` or `cat lines.txt | sort`
+
+-r: 反序 reverse
+
+-V: version 排序, 比如: `v1.2.0 < v1.10.0`, 否则, 按字串顺序排序
+
+-u: 取唯一元素 unique
+
+有时候, 可能需要`uniq` 来做更强大的处理如:
+
+取唯一元素: `uniq lines.txt`
+
+-d: 取重复出现的元素
+
+-c: 将元素出现次数统计输出, 输出格式: `count element`
+
+应用的场景:
+
+1. 从日志中, 取出访问IP的 Top N. 结合lines.txt, 取出现次数最多的3个版本号: `cat lines.txt | sort -V | uniq -c | sort -r | head -n 3`
+
+2. 2个文件做交并差, 如 a.txt 与 b.txt 
+
+并集: `sort a.txt b.txt | uniq`
+
+交集: `sort a.txt b.txt | uniq -d`
+
+a-b的差集: `sort a.txt b.txt b.txt | uniq -u`
+
+b-a的差集: `sort a.txt b.txt a.txt | uniq -u`
+
+a-b差集解释: 添加2次b.txt, 再取unique元素使得结果集中必然没有b...即(a - b)
