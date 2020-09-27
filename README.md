@@ -33,6 +33,7 @@ High level summary for InnoDB's ACID feature and its implementation.
 7. Phantom Rows
 8. Deadlocks in InnoDB
 9. Transaction Scheduling
+10. InnoDB On-Disk & In-Memory Structures
 
 High Available
 
