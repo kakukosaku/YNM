@@ -82,7 +82,17 @@ zookeeper
 
 Introduction
 
-Todo...
+- [The C10K Problem](http://www.kegel.com/c10k.html)
+
+Glossary
+
+- [Memory Barrier, 内存屏障](https://en.wikipedia.org/wiki/Memory_barrier)
+
+> is a type of barrier instruction that causes a central processing unit (CPU) or compiler to enforce an ordering constraint
+on memory operations issued before and after the barrier instruction. This typically means that operations issued prior 
+to the barrier are guaranteed to be performed before operations issued after the barrier. Are typically used when build 
+synchronization primitives and lock free data structures on multiprocessor systems, and device drivers that communicate 
+with computer hardware.
 
 Multiple Thread
 
