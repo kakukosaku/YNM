@@ -123,4 +123,3 @@ Nginx
 - [Memory model](language_topics/memory_model.md) & [Memory Management(or layout)](language_topics/memory_management.md)
 
 **Should be familiar with** [shell](language_topics/shell/README.md)
-
