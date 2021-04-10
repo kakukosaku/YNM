@@ -9,6 +9,7 @@
 - [Concurrency](#concurrency): multiple-thread, lock, I/O multiplexing, event-loop base solution, coroutine/goroutine etc.
 - [web components](#web-components): Nginx
 - [Language Related Topics](#language-related-topics): gc, memory model and other language specific feature.
+- [Other Topics](#other-topics): misc contents.
 
 ## Distributed System
 
@@ -124,3 +125,6 @@ Nginx
 
 **Should be familiar with** [shell](language_topics/shell/README.md)
 
+### Other Topics
+
+- [Different ways of caching and maintaining cache consistency](misc_topics/caching_and_cache_constency.md)
