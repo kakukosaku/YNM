@@ -95,6 +95,10 @@ to the barrier are guaranteed to be performed before operations issued after the
 synchronization primitives and lock free data structures on multiprocessor systems, and device drivers that communicate 
 with computer hardware.
 
+- [Memory Model, 内存模型](https://en.wikipedia.org/wiki/Memory_model_(programming))
+
+> In computing, **a memory model** describes the interactions of threads through memory and their shared use of the data...
+
 Multiple Thread
 
 Todo...
