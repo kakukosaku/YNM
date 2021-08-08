@@ -5,7 +5,12 @@ Ref:
 1. https://dev.mysql.com/doc/refman/8.0/en/innodb-locking.html  **Official Doc**
 2. http://makble.com/understanding-locks-in-mysql  **解释了intention lock的如何工作及它的意义, High Recommended!**
 3. https://dba.stackexchange.com/questions/249855/what-is-an-intent-lock-in-sql-server **High level的解释intention lock**
+4. https://bugs.mysql.com/bug.php?id=96013
 
+[第一部分](#summary)为对官方文档的半翻译式总结, 如果官方文档已经看了却仍然模棱两可, 可看[第二部分](#example)具体示例.
+
+## Summary
+ 
 Describe lock types used by InnoDB. High level summary:
 
 - Shared and Exclusive Locks
@@ -22,9 +27,11 @@ InnoDB 实现了标准的行锁: shared (S) locks 与 exclusive (X) locks.
 
 InnoDB支持多粒度的锁, 允许表锁行锁"共存". 例如: a statement such as `LOCK TABLES table_name WIRTE; ... UNLOCK TABLES` 获取表级独占锁.
 
-为了实现多粒度锁共存, InnoDB使用 "intention lock" (意向锁). intention locks are table-level locks: 表明事务将要获取哪种类型的锁 for a row in a table. 有2种类型的intention locks:
+为了实现多粒度锁共存, InnoDB使用 "intention lock" (意向锁). intention locks are table-level locks: 表明事务将要获取哪种类型的锁
+for a row in a table. 有2种类型的intention locks:
 
-> Intention locks are table-level locks that indicate which type of lock (shared or exclusive) a transaction requires later for a row in a table.
+> Intention locks are table-level locks that indicate which type of lock (shared or exclusive) a transaction requires
+> later for a row in a table.
 
 **An intention shared lock: IS**: indicates that a transaction intends to set a shared lock on individual rows in a table.
 
@@ -39,7 +46,8 @@ The intention locking protocol is as follows:
 
 **获取行级 X 前, 先获取 IX 或更强的表锁!**
 
-> Intention locks do not block anything except full table requests (for example, LOCK TABLES ... WRITE). The main purpose of intention locks is to show that someone is locking a row, or going to lock a row in the table.
+> Intention locks do not block anything except full table requests (for example, LOCK TABLES ... WRITE). The main purpose
+> of intention locks is to show that someone is locking a row, or going to lock a row in the table.
 
 意向锁为什么存在? 有以下概括性的描述:
 
@@ -48,15 +56,18 @@ The intention locking protocol is as follows:
 
 - Record Locks
 
-行锁, 是对`索引记录`的锁定. 例如: `SELECT C1 FROM t WHERE c1 = 10 FOR UPDATE`: 阻塞任何其它事务 inserting, updating or deleting rows where the value of t.c1 is 10.
+行锁, 是对`索引记录`的锁定. 例如: `SELECT C1 FROM t WHERE c1 = 10 FOR UPDATE`: 阻塞任何其它事务 inserting, updating or deleting
+rows where the value of t.c1 is 10.
 
-> Record locks always lock index records, even if a table is defined with no indexes. For such cases, InnoDB creates a hidden clustered index and uses this index for record locking.
+> Record locks always lock index records, even if a table is defined with no indexes. For such cases, InnoDB creates a
+> hidden clustered index and uses this index for record locking.
 
 行锁, 总是对`索引记录`的锁定. 即使表未定义index, 也会使用自动生成的`DB_ROW_ID`作为cluster index.
 
 - Gap Locks
 
-间隙锁, gap locks, 对索引间的间隙锁定, 或是对第一个/最后一个索引记录之间的间隙锁定. 例如: `SLLECT c1 FROM t WHERE c1 BETWEEN 10 and 20 FOR UPDATE`: 阻塞任何其它事务inserting 10~20之间的范围值.
+间隙锁, gap locks, 对索引间的间隙锁定, 或是对第一个/最后一个索引记录之间的间隙锁定. 例如: `SLLECT c1 FROM t WHERE c1 BETWEEN 10 and
+ 20 FOR UPDATE`: 阻塞任何其它事务inserting 10~20之间的范围值.
 
 > A gap might span a single index value, multiple index values, or even be empty.
   
@@ -67,7 +78,8 @@ The intention locking protocol is as follows:
 3. 在InnoDB中, Gap locks纯粹是为了防止其它事务的在"间隙"间 inserting而用. Gap locks can co-exist.
 
 > A gap lock taken by one transaction does not prevent another transaction from taking a gap lock on the same gap.
-> There is no difference between shared and exclusive gap locks. They do not conflict with each other, and they perform the same function.
+> There is no difference between shared and exclusive gap locks. They do not conflict with each other, and they perform
+> the same function.
 
 4. 在 READ COMMITED 隔离级别下, Gap locks是被禁用的, 除了 foreign-key checking 和 duplicate-key checking时使用.
 
@@ -79,7 +91,8 @@ A next-key lock is an index-record lock plus a gap lock on the gap preceding the
 
 - Insert Intention Locks
 
-插入意向锁, is a type of gap lock set by `INSERT` operations prior to row insertion. 实质为多事务通过持有 insert intent lock & X lock on inserted row: 提升并发能力.
+插入意向锁, is a type of gap lock set by `INSERT` operations prior to row insertion. 实质为多事务通过持有 insert intent
+lock & X lock on inserted row: 提升并发能力.
 
 - AUTO-INC Locks
 
@@ -90,3 +103,20 @@ A next-key lock is an index-record lock plus a gap lock on the gap preceding the
 - Predicate Locks for Spatial Indexes
 
 地理空间锁...more info pass
+
+## Example
+
+首先有如下表`t1`:
+
+```sql
+CREATE TABLE `t1` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `c1` varchar(10) DEFAULT NULL,
+  `c2` varchar(10) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uniq_idx_c1` (`c1`),
+  KEY `idx_c2` (`c2`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8
+```
+
+todo...
